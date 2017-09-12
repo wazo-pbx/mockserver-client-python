@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="mockserver-client",
-    version="0.0.1",
+    version="0.0.2",
     packages=setuptools.find_packages(),
     author='Job Evers-Meltzer',
     author_email='jobevers@gmail.com',
