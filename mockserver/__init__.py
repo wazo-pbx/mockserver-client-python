@@ -119,6 +119,7 @@ class MockServerClient(object):
                 is matched as "greater than or equal to"
         """
         count = 1 if count is None else count
+        exact = False if exact is None else exact
         resp = self._put("/verify", {
             "httpRequest": request,
             "times": {
