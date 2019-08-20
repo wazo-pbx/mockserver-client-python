@@ -118,14 +118,25 @@ class MockServerClient(object):
             exact: true if the count is matched as "equal to" or false if the count
                 is matched as "greater than or equal to"
         """
+
+        # NOTE(sileht): "value" is no more supported in 5.6.X
+        if 'queryStringParameters' in request:
+            for qs in request['queryStringParameters']:
+                if isinstance(qs, dict) and 'value' in qs:
+                    qs['values'] = [qs['value']]
+                    del qs['value']
+
+        # NOTE(sileht): cound and exact have been replaced by atMost/atLeast
         count = 1 if count is None else count
-        exact = False if exact is None else exact
-        resp = self._put("/verify", {
+        payload = {
             "httpRequest": request,
             "times": {
-                "count": count,
-                "exact": exact
-            }})
+                "atLeast": count
+            }
+        }
+        if exact:
+            payload["times"]["atMost"] = count
+        resp = self._put("/verify", payload)
         if resp.status_code == 202:
             return self
         else:
